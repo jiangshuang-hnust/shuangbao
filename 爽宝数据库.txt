@@ -1,0 +1,61 @@
+购物网站：
+
+--用户
+create table users(
+userid bigint primary key AUTO_INCREMENT,
+username varchar(30) not null unique,
+truename varchar(30) not null,
+passwd varchar(30) not null,
+email varchar(40) not null,
+phone varchar(20) not null,
+postcode char(6) not null,
+address varchar(30) not null,
+grade int default 5
+);
+
+--向用户表中初始化一个用户，将来可以通过注册界面来加入
+insert into users values(null,'shuang','shuang','123456','654321@qq.com','109876543210','123456','湖北省仙桃市西流镇中心村',1);
+
+--货物表格
+create table goods(
+goodsId bigint primary key auto_increment,
+goodsName varchar(40),
+goodsIntro varchar(500),
+goodsPrice float,
+goodsNum int,
+publisher varchar(40),
+photo varchar(40),
+type varchar(10)
+);
+
+--首先向货物表格中添加系列数据
+insert into goods values(null,'华为p20','高端大气',2888,10,'华为','01.jpg','手机');
+insert into goods values(null,'华为p30','高端大气上档次',3888,10,'华为','02.jpg','手机');
+
+insert into goods values(null,'儿童上衣','时尚',50.0,10,'广东','03.jpg','服装');
+insert into goods values(null,'儿童裤子','漂亮',28.88,10,'广东','04.jpg','服装');
+
+
+
+--订单
+create table orders(
+orderId bigint primary key auto_increment,
+userId bigint ,
+orderDate  TIMESTAMP  NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+payMode enum  ('货到付款','支付宝付款')  default  '货到付款',
+isPayed  enum ('0','1') default '0',
+tatalPrice float not null,
+constraint fk_user_id foreign key(userId) references users(userid)
+);
+
+
+
+
+--订单细节表 <这个其实是一张关系表格>
+create table orderDetail(
+orderId bigint,
+goodsId bigint ,
+nums int not null,
+constraint fk_order_id foreign key(orderId) references orders(orderId),
+constraint fk_goods_id foreign key(goodsId) references goods(goodsId)
+);
